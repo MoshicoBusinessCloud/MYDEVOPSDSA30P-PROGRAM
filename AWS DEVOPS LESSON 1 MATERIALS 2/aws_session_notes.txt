@@ -1,0 +1,161 @@
+AWS - Amazon Web Services - Cloud
+initial 5 days - a week - we will be learning Cloud (Virtual)
+next 4/3 days - try to complete the Linux / Unix operating system
+
+
+CPE - whether our certificates can help attain the CPE points - I will get back to you?
+
+1. Follow the document - " How to create document...." to create the AWS account
+2. We are going to learn how we create an instance called EC2 - Elastic Cloud Computing (In AWS Elastic services are a common term) 
+3. After the instance (Server) is created on the cloud we need to connect to the server 
+4. Manual way of creating an instance
+5. Automatic way of creating an intance (AWS ClousFormation) - Devops is all about automation
+
+New AWS Terms that we get
+=========================
+AWS, AWS Console, AWS EC2 instance, AWS CloudFormation, AMI (Amazon Machine Image), IAM (Identity Access Management), 
+Key Pair (Authentication), VPC, Subnet, IP-Address (IP-V4, IP-V6), Firewall (Security Group), Port, KeepAlive (Heartbeat), 
+JSON, YAML, Visual Studio Code (VSCode), AWS CLI (a command line interface to AWS Console), Staggering (Mainly used to store files in S3 by breaking the big file into smaller sized files), URI (Uniform Resource Indicator), URL (Uniform Resource Locator), Intelligent-Tiering, CloudTrail, CRUD (Create, Retrieve-Get, Update, Delete), JSON (JavaScript Object Notation - key:value pair)  
+
+Key pair - Some authentication mechanism to enable login to the virtual system/server/machine (AWS EC2 instance), from outside - that is we are going to access a machine somewhere in the internet (cloud) in some region of AWS from outside the environment - therefore we need some logic to handshake and get inside that machine. This is called connection. 
+
+Steps to generate the key pair
+------------------------------
+1. create key pair with RSA type and with .pem, which will be downloaded to your local windows m/c - done
+2. This .pem file will be converted to .ppk file for Putty to connect to the AWS instance with the same key pair encryption -    done
+3. Connect Putty to the instance - how do we do that - 
+	* Opened Putty Configuration by invoking putty
+	* created a session by the name -> dsa30m
+	* Host -> ip-address
+	* port -> 22
+	* window -> Behaviour -> Window title -> give a title to the putty window
+	* Connection -> Data -> Auto-login Username -> ubuntu
+	* SSH -> Auth -> Credentials -> browse -> select the .ppk file
+	* Session -> Saved Session -> give session name -> Save 
+	* OPEN 
+4. Want to reconnect 
+	* Invoke Putty
+	* Select the session from the list
+	* Load -> Open  
+
+Note: 
+	* Follow the document to download Putty and install Putty into your windows system
+	* PuttyGen -> use this utility to convert .pem file to .ppk 
+			-> Load
+			-> File Name: *.pem -> press enter -> select the .pem file -> Open -> Save Private Key
+			-> save the file to the same folder where you have saved the .pem file 
+
+
+Security Group (F/W)
+--------------------
+1. We create a security group for our instance and let at least an SSH connection (22) to connect from anywhere and by any ip-address
+   SSH - Secured Shell connection -> SSH -> port 22 -> anywhere 0.0.0.0/0
+2. We can add further rules -> HTTP -> port 80 -> anywhere 0.0.0.0/0    HTTPS -> 443 -> anywhere 0.0.0.0/0
+
+
+CLOUD Formation (Automatically [stack] create an instance using Cloud Formation services of AWS cloud)
+------------------------------------------------------------------------------------------------------
+1. Use a template - download from the template from Teams -> "Ubuntu-linux-lab-setup2.yml"
+2. Cloud Formation -> Create a stack -> With new resources (standard) -> Template is ready -> Upload a Template file -> Choose file -> Next -> Stack Name -> Next -> Next -> Submit
+3. Check the instances and verify the instance has been created correctly with the attached Key-Pair and Security-Group
+4. Connect using Putty 
+5. Connect using GitBash
+	$> ssh -i "c:/aws/aws-key-files/dsa30m.pem"  ubuntu@<public-ip-address>
+
+USERDATA Demo
+-------------
+done
+
+
+IAM (Identity Access Management)
+--------------------------------
+* Create a IAM user (use the IAM service of AWS)
+* Create the Access Keys
+	* Access Key ID  (AKIAWT3Y7LSYFFO3JXMP) (ZWbB4BxL4gEOPK29KZ3KdaNgnplgqCp3P98e/DmF)
+	* Secret Access Key (this is generated only once and cannot be retrieved in future, so pls store it somewhere)
+* Create the Role policy/Permissions - Policy name = AdministratorAccess
+
+
+S3 (Simple Storage Service)
+S3 Storage (Understanding & Creating Bucket, Versioning, Static Website ) 
+-------------------------------------------------------------------------
+* Cloud Storage - uses, pay as u use, ease of storage, ease of access
+* Types of storage
+	- S3 - Simple storage as discussed above 
+	- EBS - Elastic Block Storage - SSD hard drives that get attached to our system/instance
+	- EFS - Elastic File Storage - unlike EBS which is attached to an instance EFS is shared accross the instances
+	- Glacier - Archiving soln over AWS cloud - to dump the data for as low cost as possible then Glacier is the soln
+	- Storage Gateway - Move the data easily from local to Cloud or have a synchronization between the local and the Cloud for internet users 		  	    to access the same data as is used locally 
+	- Snowball - Data import and export system
+	- Snowball edge - where data in form of hardware is shipped our premises where we copy the data and ship it back to Amazon and Amazon 			  will copy the data and ship/transport/transfer/export them further to whichever destination we wanted
+	- Snowmobile - if the data is huge than we can call a Snowmobile which is Data Center on a truck, which carries the data back to Amazon 		       to be exported to any other datacenter or destination which we required
+
+S3 is an object storage - * that is we can store data from internet, we can retrieve from internet, but we cannot install anything in S3, unlike 			  	    the block storage. S3 file size can be as big as 5 TB and there can be 1000s of such files stored in S3. 
+			  * S3 can be used as a code repositories by developers, share artifact with encryption 
+			  * Durability and availabilty is 11 9s (99.999999999) and 99.99% respectively
+			  * Low Cost
+			  * Scalability
+			  * Security (Bucket policies and encryption) 
+			  * Flexibility
+
+* Bucket & Object -> Object is the data + Metadata (what is type of data, author or some non-functional data) on the S3 and Bucket is the container or the Folder where the data is stored/accessed
+
+- Demo on S3 creation, upload, access
+
+- Bucket policies - who accesses what is like IAM policy
+{
+  "Id": "Policy1683024249764",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "Stmt1683024244658",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": "arn:aws:s3:::dsa30m-2ndmay2023/*",
+      "Principal": "*"
+    }
+  ]
+}
+
+- Demo Version Control on S3 - roll forward/roll back
+
+- Storage Classes - 
+ 	- S3 standard for frequent data access
+	- S3 standard for long lived and infrequent data access
+	- Amazon Glacier for an archival solution in cloud
+	- One Zone-1A availability zone data storage for in frequent data access needs to avoid multiple az's storage to avoid charges
+	- Amazon S3 Standard reduced redundancy storage - library books which is non critical and replaceable if lost
+
+- Lifecycle management 
+	- Moving files not ferquently used from S3 standard storage to S3 infrequent access storage and further to S3 Glacier, which saves cost
+	- This is called Transition actions 
+	- THe other one is Expiration actions (Telecom example of cdrs)
+
+- Demo on lifecycle management
+
+- CloudFront - Transfer Acceleration feature of S3 
+	- CloudFront is a content delivery network (CDN) service that securely transfers data to your preferred destination with a high transfer 	          speed
+
+S3 Static Website Hosting
+-------------------------
+	* Create S3 bucket - done
+	* upload web page and image to S3 bucket - done
+	* specify bucket for static website  - done
+	* unblock public access for policies  - tbd
+	* add bucket policy to allow reading buckets (get objects) - tbd
+
+
+Amazon RDS
+-----------
+* Demo to create the RDS database instance on AWS (MariabDB)
+* Demo to connect to the RDS database with an EC2 instance having Database Client (Mariadb) - This part might not be achieved in today's session	
+
+
+
+
+
+
+
+

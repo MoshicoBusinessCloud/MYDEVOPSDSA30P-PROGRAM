@@ -1,0 +1,15 @@
+#!/bin/bash
+sudo apt update -y
+sudo apt install apache2 -y
+sudo systemctl start apache2.service
+sudo systemctl enable apache2.service
+
+touch /tmp/myfile.txt
+useradd sophie
+useradd derry
+useradd moses
+mkdir /tmp/kalkey
+mkdir /tmp/hello
+chown sophie:sophie /tmp/hello
+
+echo "<h2>Hello Everyone this is a BACKUP SERVER OF KALKEY.COM $(hostname -f) </h2>" > /var/www/html/index.html
